@@ -61,6 +61,7 @@ onMounted(async () => {
       ref="VueCanvasDrawing"
       height="560"
       width="560"
+      line-width="16"
     />
     <div
       class="absolute right-80 p-6 h-full flex flex-col items-center justify-center"
