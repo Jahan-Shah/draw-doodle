@@ -50,6 +50,7 @@ const guess = computed(() => {
 
 onMounted(async () => {
   await loadModel();
+  predict();
 });
 </script>
 
@@ -63,9 +64,7 @@ onMounted(async () => {
     width="560"
     :lineWidth="16"
   />
-  <div
-    class="absolute right-80 p-6 h-full flex flex-col items-center justify-center"
-  >
+  <div class="p-6 h-full flex flex-col items-center justify-center">
     <p v-for="item in guess">{{ item.label }}: {{ item.accuracy }}%</p>
   </div>
   <div class="absolute bottom-4 flex gap-2">

@@ -31,6 +31,7 @@ const { stream, enabled } = useUserMedia({
 });
 
 const predict = useDebounceFn(async () => {
+  if (!canvas.value) return;
   const image = new Image();
   image.src = canvas.value.toDataURL();
 
@@ -70,6 +71,7 @@ watchEffect(() => {
     const context = canvas.value.getContext("2d");
 
     const render = () => {
+      if (!video.value) return;
       if (video.value.readyState === video.value.HAVE_ENOUGH_DATA) {
         context.drawImage(
           video.value,
@@ -107,6 +109,7 @@ watchEffect(() => {
 
 onMounted(async () => {
   await loadModel();
+  predict();
 });
 </script>
 <template>
