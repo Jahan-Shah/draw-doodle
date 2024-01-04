@@ -20,8 +20,9 @@ const currentCamera = ref("");
 const { videoInputs: cameras } = useDevicesList({
   requestPermissions: true,
   onUpdated() {
-    if (!cameras.value.find((i) => i.deviceId === currentCamera.value))
+    if (!cameras.value.find((i) => i.deviceId === currentCamera.value)) {
       currentCamera.value = cameras.value[0]?.deviceId;
+    }
   },
 });
 
@@ -113,17 +114,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="flex flex-col gap-2">
-    <div
-      v-for="camera of cameras"
-      :key="camera.deviceId"
-      class="px-2 py-1 cursor-pointer"
-      :class="{ 'text-primary': currentCamera === camera.deviceId }"
-      @click="currentCamera = camera.deviceId"
-    >
-      {{ camera.label }}
-    </div>
-  </div>
+  <div class="flex absolute top-4 right-[10%] gap-2"></div>
   <video
     ref="video"
     muted
@@ -133,7 +124,7 @@ onMounted(async () => {
   />
   <canvas
     ref="canvas"
-    class="border -scale-x-100 rounded-md"
+    class="border rounded-md"
     height="560"
     width="560"
   ></canvas>
@@ -144,5 +135,13 @@ onMounted(async () => {
     <Button @click="enabled = !enabled"
       >{{ enabled ? "Stop" : "Start" }} Camera</Button
     >
+    <Button
+      v-for="camera of cameras"
+      :key="camera.deviceId"
+      class="px-2 py-1 cursor-pointer"
+      @click="currentCamera = camera.deviceId"
+    >
+      {{ camera.label }}
+    </Button>
   </div>
 </template>
