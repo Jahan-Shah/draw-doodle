@@ -113,6 +113,17 @@ onMounted(async () => {
 });
 </script>
 <template>
+  <div class="flex flex-col gap-2">
+    <div
+      v-for="camera of cameras"
+      :key="camera.deviceId"
+      class="px-2 py-1 cursor-pointer"
+      :class="{ 'text-primary': currentCamera === camera.deviceId }"
+      @click="currentCamera = camera.deviceId"
+    >
+      {{ camera.label }}
+    </div>
+  </div>
   <video
     ref="video"
     muted

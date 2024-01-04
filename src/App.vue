@@ -25,7 +25,7 @@ const toggleMode = () => {
       >Switch to {{ mode ? "Video" : "Canvas" }}</Button
     >
     <HoverCard>
-      <HoverCardTrigger>Classes</HoverCardTrigger>
+      <HoverCardTrigger class="cursor-pointer">Classes</HoverCardTrigger>
       <HoverCardContent class="w-max">
         <div class="grid grid-cols-3 gap-4">
           <p v-for="cls in classes">{{ cls }}</p>
