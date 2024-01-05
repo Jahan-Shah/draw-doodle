@@ -131,7 +131,7 @@ onMounted(async () => {
   ></canvas>
   <div
     class="p-6 h-full flex flex-col items-center justify-center"
-    :class="{ 'h-auto': mobile }"
+    :class="{ 'h-min': mobile }"
   >
     <p v-for="item in guess">{{ item.label }}: {{ item.accuracy }}%</p>
   </div>

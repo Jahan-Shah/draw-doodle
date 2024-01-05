@@ -43,7 +43,7 @@ const toggleMode = () => {
   </div>
   <main
     class="flex relative p-4 items-center justify-center h-[100vh]"
-    :class="{ 'flex-col mt-8': mobile }"
+    :class="{ 'flex-col mt-12': mobile }"
   >
     <Canvas v-if="mode" />
     <Video v-else />
