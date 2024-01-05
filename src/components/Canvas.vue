@@ -1,7 +1,7 @@
 <script setup>
 import * as tf from "@tensorflow/tfjs";
 import { Button } from "@/components/ui/button";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, inject } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useRound } from "@vueuse/math";
 import vueDrawingCanvas from "vue-drawing-canvas";
@@ -10,7 +10,11 @@ import classes from "@/assets/class_names.json";
 const VueCanvasDrawing = ref(null);
 const canvasImage = ref();
 const predictions = ref([]);
+const mobile = inject("mobile");
+const width = inject("width");
 let model;
+
+const canvasSize = computed(() => (mobile.value ? width.value - 16 : 560));
 
 const loadModel = async () => {
   model = await tf.loadLayersModel("/model/model.json");
@@ -40,7 +44,7 @@ const guess = computed(() => {
   const topValues = [...predictions.value]
     .map((value, index) => ({ value, index }))
     .sort((a, b) => b.value - a.value)
-    .slice(0, 10);
+    .slice(0, mobile.value ? 2 : 10);
 
   return topValues.map(({ value, index }) => ({
     label: classes[index],
@@ -59,12 +63,15 @@ onMounted(async () => {
     class="border-2 rounded-md"
     v-model:image="canvasImage"
     ref="VueCanvasDrawing"
-    height="560"
+    :width="canvasSize"
+    :height="canvasSize"
     lineJoin="round"
-    width="560"
     :lineWidth="16"
   />
-  <div class="p-6 h-full flex flex-col items-center justify-center">
+  <div
+    class="p-6 h-full flex flex-col items-center justify-center"
+    :class="{ 'h-auto': mobile }"
+  >
     <p v-for="item in guess">{{ item.label }}: {{ item.accuracy }}%</p>
   </div>
   <div class="absolute bottom-4 flex gap-2">

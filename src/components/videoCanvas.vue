@@ -1,16 +1,18 @@
 <script setup>
 import * as tf from "@tensorflow/tfjs";
-import { onMounted, ref, watchEffect, computed } from "vue";
-import { useUserMedia, useDevicesList } from "@vueuse/core";
-import { useDebounceFn } from "@vueuse/core";
+import { onMounted, ref, watchEffect, computed, inject } from "vue";
+import { useUserMedia, useDevicesList, useDebounceFn } from "@vueuse/core";
 import { useRound } from "@vueuse/math";
 import { Button } from "@/components/ui/button";
 import classes from "@/assets/class_names.json";
 
 const canvas = ref(null);
 const predictions = ref([]);
-
+const mobile = inject("mobile");
+const width = inject("width");
 let model;
+
+const canvasSize = computed(() => (mobile.value ? width.value - 16 : 560));
 
 const loadModel = async () => {
   model = await tf.loadLayersModel("/model/model.json");
@@ -56,7 +58,7 @@ const guess = computed(() => {
   const topValues = [...predictions.value]
     .map((value, index) => ({ value, index }))
     .sort((a, b) => b.value - a.value)
-    .slice(0, 10);
+    .slice(0, mobile.value ? 2 : 10);
 
   return topValues.map(({ value, index }) => ({
     label: classes[index],
@@ -119,16 +121,18 @@ onMounted(async () => {
     ref="video"
     muted
     autoplay
-    controls
-    class="h-[500px] hidden w-[500px]"
+    :class="`h-[${canvasSize}px] hidden w-[${canvasSize}px]`"
   />
   <canvas
     ref="canvas"
     class="border rounded-md"
-    height="560"
-    width="560"
+    :height="canvasSize"
+    :width="canvasSize"
   ></canvas>
-  <div class="p-6 h-full flex flex-col items-center justify-center">
+  <div
+    class="p-6 h-full flex flex-col items-center justify-center"
+    :class="{ 'h-auto': mobile }"
+  >
     <p v-for="item in guess">{{ item.label }}: {{ item.accuracy }}%</p>
   </div>
   <div class="absolute bottom-4 flex gap-2">
